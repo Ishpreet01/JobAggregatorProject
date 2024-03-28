@@ -1,17 +1,33 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+const express = require('express');
+const path = require('path'); // Require path module separately
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const router = require('./routes/signup.js');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 8000;
+
+
+
+app.use(cors());
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/', router);
+
+
+
+mongoose.connect('mongodb+srv://ishpreet956:PPOatMS24@cluster0.nrhttna.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(()=>{
+    app.listen(PORT,()=>{
+        console.log(`Server is running on port ${PORT}`);
+    })
+}).catch((err)=>{
+    console.log(err);
+});
+
